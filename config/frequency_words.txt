@@ -1,0 +1,18 @@
+# Keyword Filter Configuration
+# Basic syntax:
+#   - Normal word: Basic matching
+#   - +word: Required word (must appear)
+#   - !word: Exclude word (filter out)
+#   - word@N: Limit display count to N items
+#
+# Group keywords with blank lines for separate statistics
+#
+# Leave empty or comment all keywords to receive ALL news items
+# Uncomment keywords below to filter for specific topics:
+#
+# AI
+# ChatGPT
+# OpenAI
+# Claude
+# Bitcoin
+# Stock

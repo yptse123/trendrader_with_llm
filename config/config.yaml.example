@@ -1,0 +1,174 @@
+# TrendRadar AI Configuration
+# AI-powered international news aggregation and analysis
+
+app:
+  name: "TrendRadar AI"
+  version: "1.0.0"
+  show_version_update: true
+
+# Crawler Settings
+crawler:
+  request_interval: 500  # ms between requests (faster for international APIs)
+  enable_crawler: true
+  use_proxy: false
+  default_proxy: "http://127.0.0.1:10086"
+  timeout: 30  # seconds
+  max_retries: 3
+
+# Report Mode Configuration
+# - daily: Push all matched news of the day (daily summary)
+# - current: Push current ranking matches (real-time tracking)
+# - incremental: Push only new content, no duplicates (incremental monitoring)
+report:
+  mode: "daily"
+  rank_threshold: 5  # Highlight threshold for top rankings
+  sort_by_position_first: false  # true=sort by config order, false=sort by popularity
+  max_news_per_keyword: 0  # 0=unlimited
+
+# Notification Settings
+notification:
+  enable_notification: true
+  message_batch_size: 4000  # bytes
+  batch_send_interval: 3  # seconds
+
+  # Push Time Window Control (optional)
+  push_window:
+    enabled: false
+    time_range:
+      start: "09:00"
+      end: "18:00"
+    once_per_day: true
+    push_record_retention_days: 7
+
+  # Webhook URLs - Use environment variables or GitHub Secrets for security
+  webhooks:
+    # WeChat Work Bot
+    wework_url: ""
+    wework_msg_type: "markdown"
+
+    # Feishu (Lark) Bot
+    feishu_url: ""
+
+    # DingTalk Bot
+    dingtalk_url: ""
+
+    # Telegram Bot
+    telegram_bot_token: ""
+    telegram_chat_id: ""
+
+    # Email
+    email_from: ""
+    email_password: ""
+    email_to: ""
+    email_smtp_server: ""
+    email_smtp_port: ""
+
+    # ntfy
+    ntfy_server_url: "https://ntfy.sh"
+    ntfy_topic: ""
+    ntfy_token: ""
+
+    # Bark (iOS push)
+    bark_url: ""
+
+    # Slack
+    slack_webhook_url: ""
+
+# Hotspot Weight Configuration
+weight:
+  rank_weight: 0.5      # Prioritize top-ranked news
+  frequency_weight: 0.3  # Prioritize news appearing on multiple platforms
+  hotness_weight: 0.2    # Prioritize high engagement news
+
+# Platform Configuration (International Focus)
+# Distribution: 20% World News, 20% AI/Tech, 20% Finance, 40% Other
+platforms:
+  # International Big News (20%)
+  - id: "bbc"
+    name: "BBC News"
+    enabled: true
+    category: "world"
+  - id: "google_news_world"
+    name: "Google News World"
+    enabled: true
+    category: "world"
+
+  # AI & Technology (20%)
+  - id: "hackernews"
+    name: "Hacker News"
+    enabled: true
+    category: "tech"
+  - id: "techcrunch"
+    name: "TechCrunch"
+    enabled: true
+    category: "tech"
+  - id: "arstechnica"
+    name: "Ars Technica"
+    enabled: true
+    category: "tech"
+  - id: "theverge"
+    name: "The Verge"
+    enabled: true
+    category: "tech"
+  - id: "wired"
+    name: "Wired"
+    enabled: true
+    category: "tech"
+
+  # Finance (20%)
+  - id: "bloomberg"
+    name: "Bloomberg"
+    enabled: true
+    category: "finance"
+  - id: "cnbc"
+    name: "CNBC"
+    enabled: true
+    category: "finance"
+  - id: "google_news_business"
+    name: "Google News Business"
+    enabled: true
+    category: "finance"
+
+  # General/Science/Other (40%)
+  - id: "google_news_top"
+    name: "Google News Top"
+    enabled: true
+    category: "general"
+  - id: "google_news_science"
+    name: "Google News Science"
+    enabled: true
+    category: "science"
+  - id: "reddit_worldnews"
+    name: "Reddit WorldNews"
+    enabled: true
+    category: "general"
+  - id: "reddit_technology"
+    name: "Reddit Technology"
+    enabled: true
+    category: "tech"
+
+# CrewAI Agent Configuration
+crewai:
+  llm:
+    provider: "anthropic"
+    model: "claude-sonnet-4-20250514"
+    temperature: 0.7
+    max_tokens: 4096
+    base_url: ""
+
+  embedder:
+    provider: "openai"
+    model: "text-embedding-3-small"
+
+  # Disable memory to avoid OpenAI embedding dependency
+  memory: false
+  verbose: true
+
+# Output Settings
+output:
+  save_html: true
+  save_txt: true
+  save_json: true
+  output_dir: "output"
+  date_format: "%Y-%m-%d"
+  time_format: "%H:%M"

@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  trendradar:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: trendradar-ai
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+
+    # Environment variables for configuration
+    environment:
+      # Crawler settings
+      - ENABLE_CRAWLER=${ENABLE_CRAWLER:-true}
+      - REPORT_MODE=${REPORT_MODE:-daily}
+
+      # Push window settings
+      - PUSH_WINDOW_ENABLED=${PUSH_WINDOW_ENABLED:-false}
+      - PUSH_WINDOW_START=${PUSH_WINDOW_START:-09:00}
+      - PUSH_WINDOW_END=${PUSH_WINDOW_END:-18:00}
+
+      # Notification webhooks (use environment variables for security)
+      - WEWORK_WEBHOOK_URL=${WEWORK_WEBHOOK_URL:-}
+      - WEWORK_MSG_TYPE=${WEWORK_MSG_TYPE:-markdown}
+      - FEISHU_WEBHOOK_URL=${FEISHU_WEBHOOK_URL:-}
+      - DINGTALK_WEBHOOK_URL=${DINGTALK_WEBHOOK_URL:-}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID:-}
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL:-}
+      - NTFY_TOPIC=${NTFY_TOPIC:-}
+      - BARK_URL=${BARK_URL:-}
+      - EMAIL_FROM=${EMAIL_FROM:-}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD:-}
+      - EMAIL_TO=${EMAIL_TO:-}
+
+      # AI settings (for CrewAI)
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - ANTHROPIC_BASE_URL=${ANTHROPIC_BASE_URL:-}
+
+    # Mount volumes for persistence
+    volumes:
+      - ./output:/app/output
+      - ./config:/app/config:ro
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  default:
+    name: trendradar-network
