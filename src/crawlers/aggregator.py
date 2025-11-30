@@ -153,7 +153,9 @@ class NewsAggregator:
 
         # Apply ranking algorithm
         ranked_items = self._rank_news(filtered_items)
-        result.items = ranked_items
+
+        # Limit to top 10 trending news
+        result.items = ranked_items[:10]
 
         return result
 
